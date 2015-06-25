@@ -1,10 +1,29 @@
 # cookbook-nat
 
-Cookbook to set up a non CentOS NAT instance for Amazon VPCs.
+Cookbook to set up a non CentOS NAT instance for AWS VPCs.
+
+This is an _opiniated_ cookbook and makes a bunch of assumptions about how
+your NAT instance and VPC is set up so it may not work for your needs.
+
+It is assumed that:
+
+- There will be one NAT instance per AZ
+- Your private subnets have a `network` tag with the value `private`
+- Your route tables for private subnets have a `network` tag with the value `private`
+
+This way NAT instances can be placed in an AutoScaling group. When they come up a simple
+Chef run can update the relevant routes.
 
 ## Requirements
 
-Only tested on Ubuntu 14.04, but should work on earlier versions.
+Only tested on Ubuntu 14.04, but should work on earlier versions. Depends on our [aws](https://github.com/kinesisptyltd/cookbook-aws)
+cookbook.
+
+## Recipes
+
+### nat::default
+
+Runs the `aws`, `network` and `hints` recipes.
 
 ## Attributes
 
@@ -25,19 +44,3 @@ Just include `nat` in your node's `run_list`:
   ]
 }
 ```
-
-## License
-
-    Copyright 2014 Christopher Chow
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
